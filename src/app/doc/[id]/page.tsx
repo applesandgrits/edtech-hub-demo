@@ -2,6 +2,7 @@ import { neon } from "@neondatabase/serverless";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ChatPanel from "@/components/ChatPanel";
+import CommentsPanel from "@/components/CommentsPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -158,6 +159,9 @@ export default async function DocPage({
               </div>
             </div>
           )}
+
+          {/* Comments */}
+          <CommentsPanel documentId={id} />
         </div>
       </div>
 
