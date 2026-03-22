@@ -46,7 +46,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center" style={{ height: "calc(100vh - 49px)" }}>
+    <div className="flex items-center justify-center min-h-screen" style={{ background: "#11181C" }}>
       <div className="w-full max-w-sm px-6">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -56,10 +56,10 @@ export default function LoginPage() {
           >
             <span className="text-white font-bold text-2xl">EH</span>
           </div>
-          <h1 className="text-xl font-bold" style={{ color: "#11181C" }}>
+          <h1 className="text-xl font-bold text-white">
             Evidence Library
           </h1>
-          <p className="text-sm mt-1" style={{ color: "#71717A" }}>
+          <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
             Sign in to access the evidence library
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-medium mb-1" style={{ color: "#71717A" }}>
+              <label className="block text-xs font-medium mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>
                 Username
               </label>
               <input
@@ -82,7 +82,7 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-1" style={{ color: "#71717A" }}>
+              <label className="block text-xs font-medium mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>
                 Password
               </label>
               <input
@@ -112,18 +112,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Hint */}
-        <div className="mt-6 rounded-lg p-3" style={{ background: "#EAE9E5" }}>
-          <p className="text-[10px] font-medium mb-1" style={{ color: "#71717A" }}>Demo credentials</p>
-          <div className="grid grid-cols-2 gap-2 text-[10px]" style={{ color: "#A1A1AA" }}>
-            <div>
-              <span className="font-medium" style={{ color: "#11181C" }}>Admin:</span> admin / edtech2026!
-            </div>
-            <div>
-              <span className="font-medium" style={{ color: "#11181C" }}>User:</span> demo / demo2026
-            </div>
-          </div>
-        </div>
+        <p className="text-center text-[10px] mt-6" style={{ color: "rgba(255,255,255,0.3)" }}>
+          Contact your administrator for access credentials.
+        </p>
       </div>
     </div>
   );
