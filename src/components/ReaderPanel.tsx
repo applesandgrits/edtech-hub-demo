@@ -27,11 +27,12 @@ export default function ReaderPanel({
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedText, setSelectedText] = useState("");
+  const [viewMode, setViewMode] = useState<"source" | "text">(sourceUrl ? "source" : "text");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages]);
 
   // Capture text selection in the reader panel
@@ -111,11 +112,64 @@ export default function ReaderPanel({
   return (
     <div className="flex flex-1 overflow-hidden">
       {/* Left: Document content */}
+      {/* View mode tabs */}
       <div
-        ref={contentRef}
-        className="flex-1 overflow-y-auto"
+        className="flex-1 flex flex-col overflow-hidden"
         style={{ borderRight: "1px solid rgba(0,0,0,0.08)" }}
       >
+        {/* Tab bar */}
+        <div className="flex items-center gap-1 px-4 py-1.5 shrink-0" style={{ background: "white", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
+          {sourceUrl && (
+            <button
+              onClick={() => setViewMode("source")}
+              className="px-3 py-1 rounded text-xs font-medium transition-colors"
+              style={{
+                background: viewMode === "source" ? "#5CACFD" : "transparent",
+                color: viewMode === "source" ? "white" : "#71717A",
+              }}
+            >
+              Source Page
+            </button>
+          )}
+          <button
+            onClick={() => setViewMode("text")}
+            className="px-3 py-1 rounded text-xs font-medium transition-colors"
+            style={{
+              background: viewMode === "text" ? "#5CACFD" : "transparent",
+              color: viewMode === "text" ? "white" : "#71717A",
+            }}
+          >
+            Extracted Text
+          </button>
+          {sourceUrl && viewMode === "source" && (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto text-[10px] hover:underline"
+              style={{ color: "#A1A1AA" }}
+            >
+              Open in new tab &rarr;
+            </a>
+          )}
+        </div>
+
+        {/* Source iframe view */}
+        {viewMode === "source" && sourceUrl && (
+          <iframe
+            src={sourceUrl}
+            className="flex-1 w-full border-0"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+            title={`Source: ${docTitle}`}
+          />
+        )}
+
+        {/* Text view */}
+        {viewMode === "text" && (
+        <div
+          ref={contentRef}
+          className="flex-1 overflow-y-auto"
+        >
         <div className="max-w-3xl mx-auto px-8 py-6">
           {/* AI Summary at top */}
           {aiSummary && (
@@ -217,6 +271,8 @@ export default function ReaderPanel({
             </div>
           )}
         </div>
+      </div>
+        )}
       </div>
 
       {/* Right: Chat panel */}

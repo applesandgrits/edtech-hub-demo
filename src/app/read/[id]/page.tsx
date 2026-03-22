@@ -71,9 +71,9 @@ export default async function ReadPage({
             )}
           </div>
         </div>
-        {doc.url && (
+        {(doc.source_url || doc.url) && (
           <a
-            href={doc.url as string}
+            href={(doc.source_url || doc.url) as string}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs px-3 py-1.5 rounded-lg shrink-0"
@@ -91,7 +91,7 @@ export default async function ReadPage({
         fullText={doc.full_text as string}
         abstract={doc.abstract as string}
         aiSummary={doc.ai_summary as string}
-        sourceUrl={doc.url as string}
+        sourceUrl={(doc.source_url || doc.url) as string}
       />
     </div>
   );

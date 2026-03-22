@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ChatMessage from "./ChatMessage";
 
 interface RelevanceModalProps {
   docId: string;
@@ -146,7 +147,7 @@ Similarity score: ${(similarity * 100).toFixed(1)}%`,
                 </div>
               )}
               {explanation && (
-                <p className="whitespace-pre-wrap">{explanation}</p>
+                <div className="whitespace-pre-wrap"><ChatMessage text={explanation} /></div>
               )}
             </div>
 
