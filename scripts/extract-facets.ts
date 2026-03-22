@@ -13,15 +13,23 @@ dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
 const sql = neon(process.env.DATABASE_URL!);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const FACET_PROMPT = `Analyze this education technology document and extract structured facets. Return ONLY valid JSON with these keys (use arrays of short strings, 1-4 words each). If a facet doesn't apply, use an empty array.
+const FACET_PROMPT = `You are classifying an education technology document. Extract structured facets based ONLY on what is explicitly stated in the provided text. Do NOT infer, guess, or add information not present.
 
+Rules:
+- Only include a location if the document is PRIMARILY ABOUT or FOCUSED ON that country/region — not just a passing mention
+- Only include ONE format (the single best match for this document type)
+- Only include ONE methodology (the primary research approach, or empty if not a research document)
+- Be conservative: if unsure, use an empty array rather than guessing
+- Use "Global" for location only if the document explicitly covers multiple regions or is not country-specific
+
+Return ONLY valid JSON:
 {
-  "location": ["countries or regions mentioned, e.g. Sierra Leone, East Africa, Vietnam, Global"],
-  "methodology": ["research methods, e.g. RCT, Case Study, Literature Review, Landscape Scan, Mixed Methods, Survey"],
-  "format": ["document type, e.g. Report, Journal Article, Policy Brief, Blog Post, Toolkit, Framework"],
-  "technology": ["technologies discussed, e.g. Mobile Learning, Radio, SMS, Tablets, Online Platform, AI, Digital Assessment"],
-  "intervention": ["education interventions, e.g. Teacher Training, Girls Education, Personalized Learning, Distance Learning, Literacy, Numeracy"],
-  "outcome": ["outcomes measured or discussed, e.g. Learning Outcomes, Access, Equity, Teacher Performance, Cost-Effectiveness, Policy Change"]
+  "location": ["countries/regions the document is primarily focused on, e.g. Sierra Leone, East Africa, Global"],
+  "methodology": ["the PRIMARY research method, e.g. RCT, Case Study, Literature Review, Landscape Analysis, Mixed Methods, Survey"],
+  "format": ["the SINGLE document type, e.g. Report, Journal Article, Policy Brief, Blog Post, Toolkit, Framework, News Article"],
+  "technology": ["specific technologies discussed as a main topic, e.g. Mobile Learning, Radio, SMS, Tablets, AI"],
+  "intervention": ["education interventions that are a focus, e.g. Teacher Training, Girls Education, Personalized Learning"],
+  "outcome": ["outcomes explicitly measured or discussed, e.g. Learning Outcomes, Access, Equity, Cost-Effectiveness"]
 }`;
 
 async function extractFacets(
@@ -29,7 +37,7 @@ async function extractFacets(
   abstract: string,
   fullText: string
 ): Promise<Record<string, string[]>> {
-  const input = `Title: ${title}\n\nAbstract: ${abstract || "N/A"}\n\nContent excerpt: ${(fullText || "").slice(0, 3000)}`;
+  const input = `Title: ${title}\n\nAbstract: ${abstract || "N/A"}\n\nContent excerpt: ${(fullText || "").slice(0, 6000)}`;
 
   const response = await openai.chat.completions.create({
     model: "gpt-4.1-mini",
@@ -37,7 +45,7 @@ async function extractFacets(
       { role: "system", content: FACET_PROMPT },
       { role: "user", content: input },
     ],
-    max_tokens: 400,
+    max_tokens: 300,
     temperature: 0.1,
   });
 
@@ -58,6 +66,13 @@ async function main() {
 
   const docs = await sql`SELECT id, title, abstract, full_text FROM documents ORDER BY id`;
   console.log(`Processing ${docs.length} documents.\n`);
+
+  // Clear existing facets for a clean re-extraction
+  const forceRerun = process.argv.includes("--force");
+  if (forceRerun) {
+    await sql`DELETE FROM document_facets`;
+    console.log("Cleared all existing facets (--force flag).\n");
+  }
 
   // Check which already have facets
   const existing = await sql`SELECT DISTINCT document_id FROM document_facets`;
