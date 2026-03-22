@@ -35,9 +35,13 @@ export default function ChatPanel({
     setLoading(true);
 
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           query: userMessage,
           documentId: mode === "doc" ? documentId : undefined,
@@ -45,6 +49,9 @@ export default function ChatPanel({
         }),
       });
 
+      if (res.status === 429) {
+        throw new Error("You've reached your AI usage limit ($0.50). Contact an admin to reset.");
+      }
       if (!res.ok) throw new Error("Chat request failed");
 
       const reader = res.body?.getReader();
@@ -87,7 +94,7 @@ export default function ChatPanel({
       <div className="px-4 py-3 rounded-t-xl" style={{ background: "white", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-5 h-5 rounded flex items-center justify-center text-[10px] text-white font-bold" style={{ background: documentId ? "#5CACFD" : "#3B8DE8" }}>
+            <span className="w-5 h-5 rounded flex items-center justify-center text-[10px] text-white font-bold" style={{ background: documentId ? "#DC3900" : "#B83000" }}>
               {documentId ? "Q" : "AI"}
             </span>
             <h3 className="font-semibold text-sm" style={{ color: "#11181C" }}>
@@ -103,7 +110,7 @@ export default function ChatPanel({
                     ? "bg-white shadow-sm"
                     : ""
                 }`}
-                style={{ color: mode === "doc" ? "#3B8DE8" : "#71717A" }}
+                style={{ color: mode === "doc" ? "#B83000" : "#71717A" }}
               >
                 This doc
               </button>
@@ -114,7 +121,7 @@ export default function ChatPanel({
                     ? "bg-white shadow-sm"
                     : ""
                 }`}
-                style={{ color: mode === "all" ? "#3B8DE8" : "#71717A" }}
+                style={{ color: mode === "all" ? "#B83000" : "#71717A" }}
               >
                 All docs
               </button>
@@ -159,7 +166,7 @@ export default function ChatPanel({
               className="max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
               style={
                 msg.role === "user"
-                  ? { background: "#5CACFD", color: "white" }
+                  ? { background: "#DC3900", color: "white" }
                   : { background: "white", border: "1px solid rgba(0,0,0,0.08)", color: "#11181C" }
               }
             >
@@ -171,9 +178,9 @@ export default function ChatPanel({
           <div className="flex justify-start">
             <div className="px-4 py-2.5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(0,0,0,0.08)" }}>
               <div className="flex gap-1">
-                <div className="w-2 h-2 rounded-full animate-bounce" style={{ background: "#5CACFD" }} />
-                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.1s]" style={{ background: "#5CACFD" }} />
-                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.2s]" style={{ background: "#5CACFD" }} />
+                <div className="w-2 h-2 rounded-full animate-bounce" style={{ background: "#DC3900" }} />
+                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.1s]" style={{ background: "#DC3900" }} />
+                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.2s]" style={{ background: "#DC3900" }} />
               </div>
             </div>
           </div>
@@ -189,7 +196,7 @@ export default function ChatPanel({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question..."
-            className="flex-1 px-4 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5CACFD] bg-white"
+            className="flex-1 px-4 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DC3900]/40 bg-white"
             style={{ border: "1px solid rgba(0,0,0,0.08)", color: "#11181C" }}
             disabled={loading}
           />
@@ -197,7 +204,7 @@ export default function ChatPanel({
             type="submit"
             disabled={loading || !input.trim()}
             className="px-4 py-2 text-white text-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            style={{ background: "#5CACFD" }}
+            style={{ background: "#DC3900" }}
           >
             Send
           </button>

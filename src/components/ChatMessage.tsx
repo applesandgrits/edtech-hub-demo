@@ -26,7 +26,7 @@ export default function ChatMessage({ text }: { text: string }) {
         if (/^[-*]\s/.test(trimmed)) {
           return (
             <div key={li} className="flex gap-2 pl-2">
-              <span style={{ color: "#5CACFD" }} className="shrink-0 mt-0.5">
+              <span style={{ color: "#DC3900" }} className="shrink-0 mt-0.5">
                 &bull;
               </span>
               <span>{renderInline(trimmed.slice(2))}</span>
@@ -41,7 +41,7 @@ export default function ChatMessage({ text }: { text: string }) {
             <div key={li} className="flex gap-2 pl-2">
               <span
                 className="shrink-0 mt-0.5 font-medium"
-                style={{ color: "#5CACFD", minWidth: "1.2em" }}
+                style={{ color: "#DC3900", minWidth: "1.2em" }}
               >
                 {numMatch[1]}.
               </span>
@@ -82,7 +82,7 @@ function renderInline(text: string) {
                 key={i}
                 href={url}
                 className="underline decoration-1 underline-offset-2 font-medium"
-                style={{ color: "#5CACFD" }}
+                style={{ color: "#DC3900" }}
                 onClick={(e) => e.stopPropagation()}
               >
                 {linkText}
@@ -96,7 +96,7 @@ function renderInline(text: string) {
               target="_blank"
               rel="noopener noreferrer"
               className="underline decoration-1 underline-offset-2"
-              style={{ color: "#5CACFD" }}
+              style={{ color: "#DC3900" }}
             >
               {linkText}
             </a>

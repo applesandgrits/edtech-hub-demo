@@ -63,7 +63,7 @@ export default async function Home() {
             {/* Feature 1: Evidence Finder */}
             <Link href="/search" className="block rounded-xl p-5 hover:shadow-md transition-all" style={{ background: "white", border: "1px solid rgba(0,0,0,0.08)" }}>
               <div className="flex items-center gap-2 mb-2">
-                <span className="w-7 h-7 rounded-lg flex items-center justify-center text-xs text-white font-bold" style={{ background: "#5CACFD" }}>1</span>
+                <span className="w-7 h-7 rounded-lg flex items-center justify-center text-xs text-white font-bold" style={{ background: "#DC3900" }}>1</span>
                 <h3 className="font-semibold text-sm" style={{ color: "#11181C" }}>Evidence Finder</h3>
               </div>
               <p className="text-xs leading-relaxed" style={{ color: "#71717A" }}>
@@ -74,7 +74,7 @@ export default async function Home() {
             {/* Feature 2: Document Q&A */}
             <div className="rounded-xl p-5" style={{ background: "white", border: "1px solid rgba(0,0,0,0.08)" }}>
               <div className="flex items-center gap-2 mb-2">
-                <span className="w-7 h-7 rounded-lg flex items-center justify-center text-xs text-white font-bold" style={{ background: "#3B8DE8" }}>2</span>
+                <span className="w-7 h-7 rounded-lg flex items-center justify-center text-xs text-white font-bold" style={{ background: "#DC3900" }}>2</span>
                 <h3 className="font-semibold text-sm" style={{ color: "#11181C" }}>Document Q&A</h3>
               </div>
               <p className="text-xs leading-relaxed" style={{ color: "#71717A" }}>
@@ -94,7 +94,7 @@ export default async function Home() {
               <p className="text-xs leading-relaxed" style={{ color: "#71717A" }}>
                 Ask big-picture questions across the entire library. The AI synthesizes evidence from multiple documents and cites its sources.
               </p>
-              <div className="mt-2 text-xs font-medium" style={{ color: "#5CACFD" }}>
+              <div className="mt-2 text-xs font-medium" style={{ color: "#DC3900" }}>
                 Try it &rarr;
               </div>
             </Link>

@@ -28,9 +28,13 @@ export default function RelevanceModal({
 
     setLoading(true);
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           query: `Explain in 2-3 sentences why this document is relevant (or not very relevant) to the user's search query. Be specific about what matches and what doesn't.
 

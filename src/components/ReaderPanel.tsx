@@ -60,9 +60,13 @@ export default function ReaderPanel({
     setLoading(true);
 
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           query: userMessage,
           documentId: docId,
@@ -124,7 +128,7 @@ export default function ReaderPanel({
               onClick={() => setViewMode("source")}
               className="px-3 py-1 rounded text-xs font-medium transition-colors"
               style={{
-                background: viewMode === "source" ? "#5CACFD" : "transparent",
+                background: viewMode === "source" ? "#DC3900" : "transparent",
                 color: viewMode === "source" ? "white" : "#71717A",
               }}
             >
@@ -135,7 +139,7 @@ export default function ReaderPanel({
             onClick={() => setViewMode("text")}
             className="px-3 py-1 rounded text-xs font-medium transition-colors"
             style={{
-              background: viewMode === "text" ? "#5CACFD" : "transparent",
+              background: viewMode === "text" ? "#DC3900" : "transparent",
               color: viewMode === "text" ? "white" : "#71717A",
             }}
           >
@@ -183,11 +187,11 @@ export default function ReaderPanel({
               <div className="flex items-center gap-1.5 mb-1.5">
                 <span
                   className="w-4 h-4 rounded flex items-center justify-center text-[9px] text-white font-bold"
-                  style={{ background: "#5CACFD" }}
+                  style={{ background: "#DC3900" }}
                 >
                   AI
                 </span>
-                <span className="text-xs font-medium" style={{ color: "#3B8DE8" }}>
+                <span className="text-xs font-medium" style={{ color: "#DC3900" }}>
                   Summary
                 </span>
               </div>
@@ -209,7 +213,7 @@ export default function ReaderPanel({
               <button
                 onClick={askAboutSelection}
                 className="text-xs px-3 py-1 rounded-md text-white shrink-0"
-                style={{ background: "#5CACFD" }}
+                style={{ background: "#DC3900" }}
               >
                 Ask about this
               </button>
@@ -264,7 +268,7 @@ export default function ReaderPanel({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs hover:underline"
-                style={{ color: "#5CACFD" }}
+                style={{ color: "#DC3900" }}
               >
                 View original source &rarr;
               </a>
@@ -288,7 +292,7 @@ export default function ReaderPanel({
           <div className="flex items-center gap-2">
             <span
               className="w-5 h-5 rounded flex items-center justify-center text-[10px] text-white font-bold"
-              style={{ background: "#5CACFD" }}
+              style={{ background: "#DC3900" }}
             >
               Q
             </span>
@@ -341,7 +345,7 @@ export default function ReaderPanel({
                 className="max-w-[90%] px-3 py-2 rounded-xl text-xs leading-relaxed"
                 style={
                   msg.role === "user"
-                    ? { background: "#5CACFD", color: "white" }
+                    ? { background: "#DC3900", color: "white" }
                     : {
                         background: "white",
                         border: "1px solid rgba(0,0,0,0.06)",
@@ -363,9 +367,9 @@ export default function ReaderPanel({
                 style={{ background: "white", border: "1px solid rgba(0,0,0,0.06)" }}
               >
                 <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#5CACFD" }} />
-                  <div className="w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.1s]" style={{ background: "#5CACFD" }} />
-                  <div className="w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.2s]" style={{ background: "#5CACFD" }} />
+                  <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#DC3900" }} />
+                  <div className="w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.1s]" style={{ background: "#DC3900" }} />
+                  <div className="w-1.5 h-1.5 rounded-full animate-bounce [animation-delay:0.2s]" style={{ background: "#DC3900" }} />
                 </div>
               </div>
             </div>
@@ -385,7 +389,7 @@ export default function ReaderPanel({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about this document..."
-              className="flex-1 px-3 py-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5CACFD] bg-white"
+              className="flex-1 px-3 py-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DC3900]/40 bg-white"
               style={{ border: "1px solid rgba(0,0,0,0.06)", color: "#11181C" }}
               disabled={loading}
             />
@@ -393,7 +397,7 @@ export default function ReaderPanel({
               type="submit"
               disabled={loading || !input.trim()}
               className="px-3 py-2 text-white text-xs rounded-lg disabled:opacity-50 transition-colors"
-              style={{ background: "#5CACFD" }}
+              style={{ background: "#DC3900" }}
             >
               Ask
             </button>

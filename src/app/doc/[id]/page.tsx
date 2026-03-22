@@ -51,14 +51,14 @@ export default async function DocPage({
               <Link
                 href={`/read/${id}`}
                 className="px-3 py-1 text-xs font-medium rounded-md transition-colors"
-                style={{ background: "#5CACFD", color: "white" }}
+                style={{ background: "#DC3900", color: "white" }}
               >
                 Read
               </Link>
               {doc.item_type && (
                 <span
                   className="px-2 py-0.5 text-xs font-medium rounded"
-                  style={{ background: "rgba(92,172,253,0.15)", color: "#3B8DE8" }}
+                  style={{ background: "rgba(220,57,0,0.1)", color: "#DC3900" }}
                 >
                   {doc.item_type}
                 </span>
@@ -79,10 +79,10 @@ export default async function DocPage({
           {doc.ai_summary && (
             <div className="rounded-xl p-5 mb-6" style={{ background: "rgba(92,172,253,0.1)", border: "1px solid rgba(92,172,253,0.2)" }}>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-5 h-5 rounded flex items-center justify-center" style={{ background: "#5CACFD" }}>
+                <div className="w-5 h-5 rounded flex items-center justify-center" style={{ background: "#DC3900" }}>
                   <span className="text-white text-xs font-bold">AI</span>
                 </div>
-                <h3 className="font-semibold text-sm" style={{ color: "#3B8DE8" }}>
+                <h3 className="font-semibold text-sm" style={{ color: "#DC3900" }}>
                   AI Summary
                 </h3>
               </div>
@@ -108,7 +108,7 @@ export default async function DocPage({
                 <div>
                   <span style={{ color: "#A1A1AA" }}>DOI</span>
                   <p>
-                    <a href={`https://doi.org/${doc.doi}`} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#5CACFD" }}>
+                    <a href={`https://doi.org/${doc.doi}`} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#DC3900" }}>
                       {doc.doi}
                     </a>
                   </p>
@@ -136,7 +136,7 @@ export default async function DocPage({
                 <div className="col-span-2">
                   <span style={{ color: "#A1A1AA" }}>Source</span>
                   <p>
-                    <a href={(doc.source_url || doc.url) as string} target="_blank" rel="noopener noreferrer" className="hover:underline break-all" style={{ color: "#5CACFD" }}>
+                    <a href={(doc.source_url || doc.url) as string} target="_blank" rel="noopener noreferrer" className="hover:underline break-all" style={{ color: "#DC3900" }}>
                       {(doc.source_url || doc.url) as string}
                     </a>
                   </p>

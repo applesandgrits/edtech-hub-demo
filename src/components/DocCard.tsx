@@ -55,7 +55,7 @@ export default function DocCard({
               {item_type && (
                 <span
                   className="inline-block px-2 py-0.5 text-xs font-medium rounded"
-                  style={{ background: "rgba(92,172,253,0.15)", color: "#3B8DE8" }}
+                  style={{ background: "rgba(220,57,0,0.1)", color: "#DC3900" }}
                 >
                   {item_type}
                 </span>

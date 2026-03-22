@@ -44,11 +44,11 @@ async function generateSummary(
       {
         role: "system",
         content:
-          "You are a research summarizer for education technology evidence. Write a 2-3 sentence plain-language summary suitable for policymakers and practitioners in low- and middle-income countries. Focus on key findings and practical implications. Be concise.",
+          "You are a research summarizer for education technology evidence. Write a plain-language summary suitable for policymakers and practitioners in low- and middle-income countries. Start with a 2-3 sentence overview. If the source is data-heavy or contains multiple findings, add 3-5 bullet points highlighting the key data points, findings, or recommendations. Use the full source text provided, not just the title. Be specific and practical.",
       },
       {
         role: "user",
-        content: `Title: ${title}\n\nAbstract: ${abstract}`,
+        content: `Title: ${title}\n\nSource text:\n${abstract}`,
       },
     ],
     max_tokens: 200,
@@ -100,10 +100,11 @@ async function main() {
     }
     console.log(" embedded");
 
-    // Generate AI summary if abstract exists and no summary yet
-    if (doc.abstract && doc.abstract.length > 50) {
+    // Generate AI summary using full text (or abstract fallback)
+    const summarySource = (doc.full_text || doc.abstract || "").slice(0, 4000);
+    if (summarySource.length > 50) {
       try {
-        const summary = await generateSummary(doc.title, doc.abstract);
+        const summary = await generateSummary(doc.title, summarySource);
         await sql.query("UPDATE documents SET ai_summary = $1 WHERE id = $2", [
           summary,
           doc.id,

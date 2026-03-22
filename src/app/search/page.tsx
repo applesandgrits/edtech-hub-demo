@@ -43,7 +43,7 @@ function SearchResults() {
         <div className="text-center py-12">
           <div
             className="inline-block w-8 h-8 border-4 border-t-transparent rounded-full animate-spin"
-            style={{ borderColor: "#5CACFD", borderTopColor: "transparent" }}
+            style={{ borderColor: "#DC3900", borderTopColor: "transparent" }}
           />
           <p className="mt-3" style={{ color: "#71717A" }}>
             {query ? "Searching with AI..." : "Loading documents..."}
@@ -73,7 +73,7 @@ function SearchResults() {
                       {doc.item_type && (
                         <span
                           className="inline-block px-2 py-0.5 text-xs font-medium rounded"
-                          style={{ background: "rgba(92,172,253,0.15)", color: "#3B8DE8" }}
+                          style={{ background: "rgba(220,57,0,0.1)", color: "#DC3900" }}
                         >
                           {doc.item_type}
                         </span>

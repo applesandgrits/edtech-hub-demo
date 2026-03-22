@@ -46,7 +46,7 @@ export default async function ReadPage({
               {doc.item_type && (
                 <span
                   className="text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0"
-                  style={{ background: "rgba(92,172,253,0.15)", color: "#3B8DE8" }}
+                  style={{ background: "rgba(220,57,0,0.1)", color: "#DC3900" }}
                 >
                   {doc.item_type}
                 </span>
@@ -77,7 +77,7 @@ export default async function ReadPage({
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs px-3 py-1.5 rounded-lg shrink-0"
-            style={{ background: "#5CACFD", color: "white" }}
+            style={{ background: "#DC3900", color: "white" }}
           >
             Original source
           </a>

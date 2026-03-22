@@ -28,9 +28,13 @@ export default function ExplorePage() {
     setLoading(true);
 
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ query: userMessage, mode: "all" }),
       });
 
@@ -72,7 +76,7 @@ export default function ExplorePage() {
     <div className="max-w-3xl mx-auto px-4 py-8 flex flex-col" style={{ minHeight: "calc(100vh - 120px)" }}>
       {/* Header */}
       <div className="mb-6 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ background: "rgba(92,172,253,0.15)", color: "#3B8DE8" }}>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ background: "rgba(220,57,0,0.1)", color: "#DC3900" }}>
           Repository Explorer
         </div>
         <h1 className="text-2xl font-bold mb-2" style={{ color: "#11181C" }}>
@@ -112,13 +116,13 @@ export default function ExplorePage() {
               className="max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed"
               style={
                 msg.role === "user"
-                  ? { background: "#5CACFD", color: "white" }
+                  ? { background: "#DC3900", color: "white" }
                   : { background: "white", border: "1px solid rgba(0,0,0,0.08)", color: "#11181C" }
               }
             >
               {msg.role === "assistant" && (
-                <div className="flex items-center gap-1.5 mb-1.5 text-xs font-medium" style={{ color: "#3B8DE8" }}>
-                  <span className="w-4 h-4 rounded flex items-center justify-center text-[10px] text-white font-bold" style={{ background: "#5CACFD" }}>AI</span>
+                <div className="flex items-center gap-1.5 mb-1.5 text-xs font-medium" style={{ color: "#DC3900" }}>
+                  <span className="w-4 h-4 rounded flex items-center justify-center text-[10px] text-white font-bold" style={{ background: "#DC3900" }}>AI</span>
                   Repository Explorer
                 </div>
               )}
@@ -131,9 +135,9 @@ export default function ExplorePage() {
           <div className="flex justify-start">
             <div className="px-4 py-3 rounded-2xl" style={{ background: "white", border: "1px solid rgba(0,0,0,0.08)" }}>
               <div className="flex gap-1">
-                <div className="w-2 h-2 rounded-full animate-bounce" style={{ background: "#5CACFD" }} />
-                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.1s]" style={{ background: "#5CACFD" }} />
-                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.2s]" style={{ background: "#5CACFD" }} />
+                <div className="w-2 h-2 rounded-full animate-bounce" style={{ background: "#DC3900" }} />
+                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.1s]" style={{ background: "#DC3900" }} />
+                <div className="w-2 h-2 rounded-full animate-bounce [animation-delay:0.2s]" style={{ background: "#DC3900" }} />
               </div>
             </div>
           </div>
@@ -149,7 +153,7 @@ export default function ExplorePage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question across all evidence..."
-            className="flex-1 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5CACFD] bg-white text-sm"
+            className="flex-1 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DC3900]/40 bg-white text-sm"
             style={{ border: "1px solid rgba(0,0,0,0.1)", color: "#11181C" }}
             disabled={loading}
           />
@@ -157,7 +161,7 @@ export default function ExplorePage() {
             type="submit"
             disabled={loading || !input.trim()}
             className="px-5 py-3 text-white rounded-xl disabled:opacity-50 transition-colors text-sm font-medium"
-            style={{ background: "#5CACFD" }}
+            style={{ background: "#DC3900" }}
           >
             Ask
           </button>

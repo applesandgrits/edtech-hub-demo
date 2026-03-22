@@ -1,11 +1,25 @@
 import { neon } from "@neondatabase/serverless";
 import OpenAI from "openai";
 import { NextRequest } from "next/server";
+import { getUserFromRequest } from "@/lib/auth";
+import { checkUsageCap, recordUsage } from "@/lib/services/usage";
 
 const sql = neon(process.env.DATABASE_URL!);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(request: NextRequest) {
+  // Auth check
+  const user = await getUserFromRequest(request);
+  if (!user) {
+    return new Response("Authentication required", { status: 401 });
+  }
+
+  // Usage cap check
+  const underCap = await checkUsageCap(user.userId);
+  if (!underCap) {
+    return new Response("AI usage limit reached ($0.50). Contact an admin to reset.", { status: 429 });
+  }
+
   const { query, documentId, mode } = await request.json();
 
   if (!query) {
@@ -87,14 +101,21 @@ export async function POST(request: NextRequest) {
   });
 
   const encoder = new TextEncoder();
+  let totalOutputTokens = 0;
+  // Estimate input tokens: ~4 chars per token
+  const estimatedInputTokens = Math.ceil((systemPrompt.length + context.length + query.length) / 4);
+
   const stream = new ReadableStream({
     async start(controller) {
       for await (const chunk of response) {
         const text = chunk.choices[0]?.delta?.content ?? "";
         if (text) {
           controller.enqueue(encoder.encode(text));
+          totalOutputTokens += Math.ceil(text.length / 4);
         }
       }
+      // Record usage after stream completes
+      await recordUsage(user.userId, estimatedInputTokens, totalOutputTokens);
       controller.close();
     },
   });

@@ -28,7 +28,7 @@ export default function SearchBar({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ask a question about education technology evidence..."
-          className={`w-full rounded-xl bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#5CACFD] ${
+          className={`w-full rounded-xl bg-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#DC3900]/40 ${
             large ? "px-6 py-4 text-lg" : "px-4 py-3 text-sm"
           }`}
           style={{ color: "#11181C", border: "1px solid rgba(0,0,0,0.1)" }}
@@ -38,9 +38,9 @@ export default function SearchBar({
           className={`absolute right-2 text-white rounded-lg transition-colors ${
             large ? "top-2 px-6 py-2 text-base" : "top-1.5 px-4 py-1.5 text-sm"
           }`}
-          style={{ background: "#5CACFD" }}
-          onMouseOver={(e) => (e.currentTarget.style.background = "#3B8DE8")}
-          onMouseOut={(e) => (e.currentTarget.style.background = "#5CACFD")}
+          style={{ background: "#DC3900" }}
+          onMouseOver={(e) => (e.currentTarget.style.background = "#B83000")}
+          onMouseOut={(e) => (e.currentTarget.style.background = "#DC3900")}
         >
           Search
         </button>
