@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import ChatMessage from "./ChatMessage";
+import { useAuth } from "@/lib/auth-context";
 
 interface Message {
   role: "user" | "assistant";
@@ -15,6 +16,7 @@ export default function ChatPanel({
   documentId?: string;
   documentTitle?: string;
 }) {
+  const { refreshUser } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -85,6 +87,7 @@ export default function ChatPanel({
       ]);
     } finally {
       setLoading(false);
+      refreshUser(); // Update usage meter in nav
     }
   };
 

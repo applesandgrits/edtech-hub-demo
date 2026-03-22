@@ -59,21 +59,24 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Score display: use raw cosine similarity scaled to a readable percentage.
-  // Raw cosine similarity for text-embedding-3-small typically ranges:
-  //   0.5+  = very strong match
-  //   0.35-0.5 = good match
-  //   0.25-0.35 = weak/partial match
-  //   <0.25 = poor match
-  // Scale: raw * 1.5, capped at 99%, so 0.5 raw → 75%, 0.35 → 52%, 0.25 → 37%
+  // Filter out low-relevance results and scale scores.
+  // Raw cosine similarity for text-embedding-3-small:
+  //   0.5+  = very strong    0.35-0.5 = good
+  //   0.25-0.35 = weak       <0.25 = irrelevant
+  // Filter: drop anything below 0.20 raw (30% displayed)
+  // Scale: raw * 1.5, capped at 99%
+  const filtered = [];
   for (const doc of deduped) {
     const raw = parseFloat((doc as any).similarity) || 0;
+    if (raw < 0.20) continue; // Skip irrelevant results
     (doc as any).similarity = Math.min(raw * 1.5, 0.99);
+    filtered.push(doc);
   }
+  const finalDocs = filtered;
 
   return NextResponse.json({
-    docs: deduped,
-    total: deduped.length,
+    docs: finalDocs,
+    total: finalDocs.length,
     page,
     query,
   });
