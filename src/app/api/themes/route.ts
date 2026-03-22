@@ -137,6 +137,9 @@ export async function GET() {
       d.title,
       d.item_type,
       d.ai_summary,
+      d.authors,
+      d.date_published,
+      d.tags,
       e.embedding::text as embedding_text
     FROM embeddings e
     JOIN documents d ON d.id = e.document_id
@@ -150,6 +153,9 @@ export async function GET() {
     title: r.title,
     item_type: r.item_type,
     ai_summary: r.ai_summary,
+    authors: r.authors,
+    date_published: r.date_published,
+    tags: r.tags,
     embedding: JSON.parse(r.embedding_text) as number[],
   }));
 
@@ -199,6 +205,9 @@ export async function GET() {
         title: d!.title,
         item_type: d!.item_type,
         ai_summary: d!.ai_summary?.slice(0, 120),
+        authors: d!.authors,
+        date_published: d!.date_published,
+        tags: d!.tags,
         x: projMap.get(d!.id)?.x || 0,
         y: projMap.get(d!.id)?.y || 0,
       })),

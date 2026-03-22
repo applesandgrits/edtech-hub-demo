@@ -8,6 +8,9 @@ interface ThemeDoc {
   title: string;
   item_type: string;
   ai_summary: string;
+  authors: { firstName: string; lastName: string }[] | string | null;
+  date_published: string | null;
+  tags: string[] | null;
   x: number;
   y: number;
 }
@@ -399,6 +402,16 @@ export default function ThemesPage() {
   );
 }
 
+function formatAuthors(authors: ThemeDoc["authors"]): string {
+  const list = typeof authors === "string" ? JSON.parse(authors) : authors || [];
+  if (list.length === 0) return "";
+  const names = list
+    .slice(0, 2)
+    .map((a: any) => `${a.lastName || ""}${a.lastName && a.firstName ? ", " : ""}${(a.firstName || "").charAt(0)}.`.trim())
+    .filter(Boolean);
+  return names.join(" & ") + (list.length > 2 ? ` +${list.length - 2}` : "");
+}
+
 function DocList({
   docs,
   themes,
@@ -411,16 +424,22 @@ function DocList({
   setHoveredDoc: (id: string | null) => void;
 }) {
   return (
-    <div className="space-y-1.5 max-h-[420px] overflow-y-auto pr-1">
+    <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
       {docs.map((doc) => {
         const themeIdx = themes.findIndex((t) =>
           t.docs.some((d) => d.id === doc.id)
         );
+        const authorStr = formatAuthors(doc.authors);
+        const year = doc.date_published
+          ? new Date(doc.date_published).getFullYear()
+          : null;
+        const tags = typeof doc.tags === "string" ? JSON.parse(doc.tags) : doc.tags;
+
         return (
           <Link
             key={doc.id}
             href={`/doc/${doc.id}`}
-            className="block rounded-lg p-2.5 transition-all"
+            className="block rounded-lg p-3 transition-all group"
             style={{
               background:
                 hoveredDoc === doc.id ? "white" : "rgba(255,255,255,0.6)",
@@ -435,26 +454,77 @@ function DocList({
           >
             <div className="flex items-start gap-2">
               <span
-                className="w-2 h-2 rounded-full mt-1 shrink-0"
+                className="w-2 h-2 rounded-full mt-1.5 shrink-0"
                 style={{
                   background: COLORS[themeIdx % COLORS.length].bg,
                 }}
               />
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p
-                  className="text-[11px] font-medium line-clamp-2"
+                  className="text-xs font-semibold line-clamp-2 group-hover:underline"
                   style={{ color: "#11181C" }}
                 >
                   {doc.title}
                 </p>
+
+                {/* Metadata row */}
+                <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                  {doc.item_type && (
+                    <span
+                      className="px-1.5 py-0.5 text-[9px] font-medium rounded"
+                      style={{ background: "rgba(220,57,0,0.1)", color: "#DC3900" }}
+                    >
+                      {doc.item_type}
+                    </span>
+                  )}
+                  {authorStr && (
+                    <span className="text-[10px]" style={{ color: "#71717A" }}>
+                      {authorStr}
+                    </span>
+                  )}
+                  {year && (
+                    <span className="text-[10px]" style={{ color: "#A1A1AA" }}>
+                      {year}
+                    </span>
+                  )}
+                </div>
+
                 {doc.ai_summary && (
                   <p
-                    className="text-[9px] mt-0.5 line-clamp-2"
-                    style={{ color: "#A1A1AA" }}
+                    className="text-[10px] mt-1 line-clamp-2 leading-relaxed"
+                    style={{ color: "#71717A" }}
                   >
                     {doc.ai_summary}
                   </p>
                 )}
+
+                {/* Tags */}
+                {tags && tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {tags.slice(0, 3).map((tag: string) => (
+                      <span
+                        key={tag}
+                        className="px-1.5 py-0.5 text-[8px] rounded"
+                        style={{ background: "#EAE9E5", color: "#A1A1AA" }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {tags.length > 3 && (
+                      <span className="text-[8px]" style={{ color: "#A1A1AA" }}>
+                        +{tags.length - 3}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* View link */}
+                <span
+                  className="text-[10px] font-medium mt-1.5 inline-block opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ color: "#DC3900" }}
+                >
+                  View document →
+                </span>
               </div>
             </div>
           </Link>
