@@ -143,18 +143,18 @@ export default async function DocPage({
                   <p style={{ color: "#11181C" }}>{doc.rights}</p>
                 </div>
               )}
-              {doc.url && (
+              {(doc.source_url || doc.url) && (
                 <div className="col-span-2">
                   <span style={{ color: "#A1A1AA" }}>Source</span>
                   <p>
                     <a
-                      href={doc.url}
+                      href={(doc.source_url || doc.url) as string}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:underline break-all"
                       style={{ color: "#5CACFD" }}
                     >
-                      {doc.url}
+                      {(doc.source_url || doc.url) as string}
                     </a>
                   </p>
                 </div>
