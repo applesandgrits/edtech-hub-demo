@@ -1,3 +1,11 @@
+---
+title: EdTech Hub Evidence Library Demo — Architecture
+aliases: [EdTech Hub Evidence Library Demo — Architecture]
+linter-yaml-title-alias: EdTech Hub Evidence Library Demo — Architecture
+date created: Saturday, March 21st 2026, 5:29:33 pm
+date modified: Sunday, March 22nd 2026, 8:54:53 am
+---
+
 # EdTech Hub Evidence Library Demo — Architecture
 
 ## Overview
