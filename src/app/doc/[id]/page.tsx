@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import ChatPanel from "@/components/ChatPanel";
+import DocPageLayout from "@/components/DocPageLayout";
 import CommentsPanel from "@/components/CommentsPanel";
 
 export const dynamic = "force-dynamic";
@@ -31,10 +31,8 @@ export default async function DocPage({
     : null;
 
   return (
-    <div className="flex" style={{ height: "calc(100vh - 49px)" }}>
-      {/* Left: Document content (scrollable) */}
-      <div className="flex-1 overflow-y-auto" style={{ borderRight: "1px solid rgba(0,0,0,0.08)" }}>
-        <div className="max-w-3xl mx-auto px-8 py-8">
+    <DocPageLayout documentId={doc.id} documentTitle={doc.title}>
+      <div className="max-w-3xl mx-auto px-4 sm:px-8 py-8">
           <Link
             href="/search"
             className="inline-flex items-center gap-1 text-sm mb-6 transition-colors"
@@ -163,12 +161,6 @@ export default async function DocPage({
           {/* Comments */}
           <CommentsPanel documentId={id} />
         </div>
-      </div>
-
-      {/* Right: Full-height chat panel */}
-      <div className="w-[400px] shrink-0 flex flex-col" style={{ background: "#EAE9E5" }}>
-        <ChatPanel documentId={doc.id} documentTitle={doc.title} />
-      </div>
-    </div>
+    </DocPageLayout>
   );
 }

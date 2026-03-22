@@ -31,6 +31,7 @@ export default function BrowsePage() {
   const [selectedFacets, setSelectedFacets] = useState<{ type: string; value: string }[]>([]);
   const [sort, setSort] = useState<"date" | "title">("date");
   const [showAbstract, setShowAbstract] = useState(true);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // Fetch facets once
   useEffect(() => {
@@ -110,7 +111,46 @@ export default function BrowsePage() {
       </div>
 
       <div className="flex gap-6">
-        {/* Left sidebar */}
+        {/* Mobile filter button */}
+        <button
+          onClick={() => setMobileFiltersOpen(true)}
+          className="lg:hidden flex items-center gap-2 text-sm px-4 py-2 rounded-lg mb-4 w-full justify-center"
+          style={{ background: "white", border: "1px solid rgba(0,0,0,0.1)", color: "#11181C" }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="7" y1="12" x2="17" y2="12" />
+            <line x1="10" y1="18" x2="14" y2="18" />
+          </svg>
+          Filters
+          {selectedFacets.length > 0 && (
+            <span className="w-5 h-5 rounded-full text-xs text-white font-bold flex items-center justify-center" style={{ background: "#DC3900" }}>
+              {selectedFacets.length}
+            </span>
+          )}
+        </button>
+
+        {/* Mobile filter overlay */}
+        {mobileFiltersOpen && (
+          <>
+            <div className="lg:hidden fixed inset-0 z-40" style={{ background: "rgba(0,0,0,0.3)" }} onClick={() => setMobileFiltersOpen(false)} />
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 rounded-t-2xl shadow-xl overflow-y-auto" style={{ background: "#F4F2EE", maxHeight: "80vh" }}>
+              <div className="flex items-center justify-between px-4 py-3 sticky top-0" style={{ background: "#F4F2EE", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+                <span className="font-semibold text-sm" style={{ color: "#11181C" }}>Filters</span>
+                <button onClick={() => setMobileFiltersOpen(false)} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(0,0,0,0.05)" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#11181C" strokeWidth="2" strokeLinecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+              <div className="px-4 pb-6">
+                <FacetSidebar dimensions={dimensions} selectedFacets={selectedFacets} onToggleFacet={handleToggleFacet} />
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Desktop sidebar */}
         <div className="w-[280px] shrink-0 hidden lg:block">
           <FacetSidebar
             dimensions={dimensions}

@@ -81,6 +81,8 @@ export default function ExplorePage() {
     } else if (loaded.length > 0) {
       setActiveId(loaded[0].id);
     }
+    // Collapse sidebar on mobile after hydration
+    if (window.innerWidth < 1024) setSidebarOpen(false);
     setHydrated(true);
   }, []);
 
