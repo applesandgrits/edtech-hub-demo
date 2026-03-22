@@ -59,18 +59,16 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Normalize scores: scale relative to the best match so top result = ~95%
-  if (deduped.length > 0) {
-    const rawScores = deduped.map((d: any) => parseFloat(d.similarity) || 0);
-    const maxScore = Math.max(...rawScores);
-    const minScore = Math.min(...rawScores);
-    const range = maxScore - minScore || 0.01;
-
-    for (let i = 0; i < deduped.length; i++) {
-      // Map to 60-98% range: top match ~95%, lowest ~60%
-      const normalized = ((rawScores[i] - minScore) / range) * 0.35 + 0.60;
-      (deduped[i] as any).similarity = Math.min(normalized, 0.98);
-    }
+  // Score display: use raw cosine similarity scaled to a readable percentage.
+  // Raw cosine similarity for text-embedding-3-small typically ranges:
+  //   0.5+  = very strong match
+  //   0.35-0.5 = good match
+  //   0.25-0.35 = weak/partial match
+  //   <0.25 = poor match
+  // Scale: raw * 1.5, capped at 99%, so 0.5 raw → 75%, 0.35 → 52%, 0.25 → 37%
+  for (const doc of deduped) {
+    const raw = parseFloat((doc as any).similarity) || 0;
+    (doc as any).similarity = Math.min(raw * 1.5, 0.99);
   }
 
   return NextResponse.json({
