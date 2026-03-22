@@ -49,12 +49,27 @@ export async function GET(request: NextRequest) {
     params
   );
 
+  // Deduplicate by document (keep highest similarity)
   const seen = new Map();
   const deduped = [];
   for (const doc of docs) {
     if (!seen.has(doc.id)) {
       seen.set(doc.id, true);
       deduped.push(doc);
+    }
+  }
+
+  // Normalize scores: scale relative to the best match so top result = ~95%
+  if (deduped.length > 0) {
+    const rawScores = deduped.map((d: any) => parseFloat(d.similarity) || 0);
+    const maxScore = Math.max(...rawScores);
+    const minScore = Math.min(...rawScores);
+    const range = maxScore - minScore || 0.01;
+
+    for (let i = 0; i < deduped.length; i++) {
+      // Map to 60-98% range: top match ~95%, lowest ~60%
+      const normalized = ((rawScores[i] - minScore) / range) * 0.35 + 0.60;
+      (deduped[i] as any).similarity = Math.min(normalized, 0.98);
     }
   }
 

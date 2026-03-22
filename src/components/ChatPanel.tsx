@@ -124,7 +124,7 @@ export default function ChatPanel({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px] max-h-[500px]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[200px]">
         {messages.length === 0 && (
           <div className="text-center py-8">
             <p className="text-sm" style={{ color: "#A1A1AA" }}>

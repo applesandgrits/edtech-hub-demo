@@ -151,20 +151,17 @@ Similarity score: ${(similarity * 100).toFixed(1)}%`,
               )}
             </div>
 
-            {matchedChunk && (
-              <div className="mt-3">
-                <p className="text-xs mb-1" style={{ color: "#A1A1AA" }}>
-                  Matched text excerpt
-                </p>
-                <p
-                  className="text-xs leading-relaxed p-3 rounded-lg"
-                  style={{ background: "#F4F2EE", color: "#71717A" }}
-                >
-                  {matchedChunk.slice(0, 300)}
-                  {matchedChunk.length > 300 ? "..." : ""}
-                </p>
-              </div>
-            )}
+            {/* Link to the document */}
+            <div className="mt-3 text-center">
+              <a
+                href={`/doc/${docId}`}
+                className="text-xs font-medium hover:underline"
+                style={{ color: "#5CACFD" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                View full document &rarr;
+              </a>
+            </div>
           </div>
         </div>
       )}
