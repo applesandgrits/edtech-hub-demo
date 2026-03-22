@@ -26,11 +26,17 @@ a, button {
   transition: all 0.15s ease;
 }
 
-/* Hide footer on reader pages */
-body:has(.reader-view) footer {
+/* Hide footer on reader and explorer pages */
+body:has(.reader-view) footer,
+body:has(.explorer-view) footer {
   display: none;
 }
-body:has(.reader-view) main {
+body:has(.reader-view) main,
+body:has(.explorer-view) main {
   flex: 1;
   overflow: hidden;
+}
+/* Remove bottom margin on explorer */
+body:has(.explorer-view) footer + * {
+  margin-top: 0;
 }

@@ -25,13 +25,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
           <div className="flex items-center gap-1 text-sm">
-            <Link href="/search" className="px-3 py-1.5 rounded-md text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+            <Link href="/" className={`px-3 py-1.5 rounded-md transition-colors ${pathname === "/" ? "text-white bg-white/10" : "text-white/70 hover:text-white hover:bg-white/10"}`}>
+              Browse
+            </Link>
+            <Link href="/search" className={`px-3 py-1.5 rounded-md transition-colors ${pathname === "/search" ? "text-white bg-white/10" : "text-white/70 hover:text-white hover:bg-white/10"}`}>
               Evidence Finder
             </Link>
-            <Link href="/explore" className="px-3 py-1.5 rounded-md text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+            <Link href="/explore" className={`px-3 py-1.5 rounded-md transition-colors ${pathname === "/explore" ? "text-white bg-white/10" : "text-white/70 hover:text-white hover:bg-white/10"}`}>
               Repository Explorer
             </Link>
-            <Link href="/themes" className="px-3 py-1.5 rounded-md text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+            <Link href="/themes" className={`px-3 py-1.5 rounded-md transition-colors ${pathname === "/themes" ? "text-white bg-white/10" : "text-white/70 hover:text-white hover:bg-white/10"}`}>
               Themes
             </Link>
             <div className="w-px h-5 mx-1" style={{ background: "rgba(255,255,255,0.15)" }} />

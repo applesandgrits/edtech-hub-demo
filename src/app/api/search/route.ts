@@ -12,14 +12,53 @@ export async function GET(request: NextRequest) {
   const limit = 20;
   const offset = (page - 1) * limit;
 
+  const sort = request.nextUrl.searchParams.get("sort") ?? "date";
+  const facetsParam = request.nextUrl.searchParams.get("facets") ?? "";
+
+  // Parse facet filters: "location:Kenya,methodology:RCT"
+  const facetFilters: { type: string; value: string }[] = [];
+  if (facetsParam) {
+    for (const pair of facetsParam.split(",")) {
+      const colonIdx = pair.indexOf(":");
+      if (colonIdx > 0) {
+        facetFilters.push({
+          type: pair.slice(0, colonIdx),
+          value: pair.slice(colonIdx + 1),
+        });
+      }
+    }
+  }
+
   if (!query.trim()) {
+    // Build facet filter conditions separately for docs query and count query
+    const facetParams: any[] = [];
+    let facetWhere = "";
+    if (facetFilters.length > 0) {
+      const conditions = facetFilters.map((f) => {
+        const typeIdx = facetParams.length + 1;
+        const valIdx = facetParams.length + 2;
+        facetParams.push(f.type, f.value);
+        return `EXISTS (SELECT 1 FROM document_facets df WHERE df.document_id = d.id AND df.facet_type = $${typeIdx} AND df.facet_value = $${valIdx})`;
+      });
+      facetWhere = "WHERE " + conditions.join(" AND ");
+    }
+
+    const orderBy = sort === "date" ? "d.date_published DESC NULLS LAST" : "d.title ASC";
+    const limitIdx = facetParams.length + 1;
+    const offsetIdx = facetParams.length + 2;
+    const docsParams = [...facetParams, limit, offset];
     const docs = await sql.query(
-      `SELECT id, title, abstract, authors, item_type, date_published, doi, url, tags, ai_summary
-       FROM documents ORDER BY date_published DESC NULLS LAST LIMIT $1 OFFSET $2`,
-      [limit, offset]
+      `SELECT d.id, d.title, d.abstract, d.authors, d.item_type, d.date_published, d.doi, d.url, d.tags, d.ai_summary
+       FROM documents d ${facetWhere} ORDER BY ${orderBy} LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
+      docsParams
     );
-    const total = await sql`SELECT COUNT(*) as count FROM documents`;
-    return NextResponse.json({ docs, total: parseInt(total[0].count), page });
+    const totalQuery = facetFilters.length > 0
+      ? await sql.query(
+          `SELECT COUNT(*) as count FROM documents d ${facetWhere}`,
+          facetParams
+        )
+      : await sql`SELECT COUNT(*) as count FROM documents`;
+    return NextResponse.json({ docs, total: parseInt(totalQuery[0].count), page });
   }
 
   const embResponse = await openai.embeddings.create({
